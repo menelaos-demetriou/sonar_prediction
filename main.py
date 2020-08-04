@@ -2,6 +2,7 @@ import pandas as pd
 
 from sklearn import metrics
 from keras.layers import Dense
+from keras import backend as K
 from keras.optimizers import SGD
 from keras.layers import Dropout
 from keras.models import Sequential
@@ -56,6 +57,7 @@ def feature_selection(data, type):
 def create_model(num, dropout_rate=0.1, neurons1=10, neurons2=5, init_mode='uniform', learn_rate=0.01, momentum=0,
                  optimizer='adam'):
     # create model
+    K.clear_session()
     model = Sequential()
     model.add(Dense(neurons1, input_dim=num, kernel_initializer=init_mode, activation='relu'))
     model.add(Dropout(dropout_rate))
