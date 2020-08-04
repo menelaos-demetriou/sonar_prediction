@@ -3,10 +3,10 @@ The task is to train a predictor to discriminate between sonar signals bounced o
 More information can be found in https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)
 
 # Requirements
-pandas 
-numpy 
-scikit-learn 
-keras
-tensorflow
-seaborn 
-matplotlib
+pandas  
+numpy  
+scikit-learn  
+keras  
+tensorflow  
+seaborn  
+matplotlib  
