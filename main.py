@@ -2,6 +2,8 @@ import pandas as pd
 
 from sklearn import metrics
 from keras.layers import Dense
+from keras.optimizers import SGD
+from keras.layers import Dropout
 from keras.models import Sequential
 from sklearn.decomposition import PCA
 from sklearn.feature_selection import RFECV
@@ -51,13 +53,17 @@ def feature_selection(data, type):
         return pd.concat([pd.DataFrame(x_reduced), pd.Series(y, name="target")], axis = 1)
 
 
-def create_model(num, neurons1=10, neurons2=5):
+def create_model(num, dropout_rate=0.1, neurons1=10, neurons2=5, init_mode='uniform', learn_rate=0.01, momentum=0,
+                 optimizer='adam'):
     # create model
     model = Sequential()
-    model.add(Dense(neurons1, input_dim=num, activation='relu'))
-    model.add(Dense(neurons2, activation='relu'))
-    model.add(Dense(1, activation='sigmoid'))
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    model.add(Dense(neurons1, input_dim=num, kernel_initializer=init_mode, activation='relu'))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(neurons2, kernel_initializer=init_mode, activation='relu'))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(1, kernel_initializer=init_mode, activation='sigmoid'))
+    optimizer = SGD(lr=learn_rate, momentum=momentum)
+    model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
 def main():
@@ -89,12 +95,11 @@ def main():
     neurons2 = [1, 5, 10, 15, 20]
 
     param_grid = dict(epochs=epochs, optimizer=optimizer, learn_rate=learn_rate, momentum=momentum,
-                      init_mode=init_mode, dropout_rate=dropout_rate,
-                      neurons1=neurons1, neurons2=neurons2)
+                      init_mode=init_mode, dropout_rate=dropout_rate, neurons1=neurons1, neurons2=neurons2)
 
 
     if GRID:
-        grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=5)
+        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
         grid_result = grid.fit(X_train, y_train)
         print("Hello")
         # summarize results
