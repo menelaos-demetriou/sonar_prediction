@@ -101,7 +101,7 @@ def main():
     if GRID:
         grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
         grid_result = grid.fit(X_train, y_train)
-        print("Hello")
+
         # summarize results
         print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
         means = grid_result.cv_results_['mean_test_score']
